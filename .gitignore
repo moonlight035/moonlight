@@ -9,3 +9,6 @@ RedBlackTree.iml
 .idea/modules.xml
 .idea/misc.xml
 .idea/encodings.xml
+out/production/RedBlackTree/RedBlackTree$TreeGui.class
+out/production/RedBlackTree/META-INF/RedBlackTree.kotlin_module
+.idea/uiDesigner.xml
