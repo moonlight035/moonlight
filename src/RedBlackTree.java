@@ -42,7 +42,7 @@ public class RedBlackTree {
     * @Return: RedBlackTree.TreeNode
     * @Date: 2019-10-23 15-44-37
     */
-    private TreeNode getInsertSite(Integer key){
+    private TreeNode getSite(Integer key){
         TreeNode temp=root;
         if(temp==null) {return null;}
         while(temp!=null){
@@ -98,28 +98,29 @@ public class RedBlackTree {
     }
 
     /**
-    * description: 自平衡红黑树
+    * description: 插入操作自平衡红黑树
     * @author: 刘竞(jing.liu14@ucarinc.com)
     * @param1 insertNode：
     * @Return: void
     * @Date: 2019-10-23 16-04-52
     */
-    private void balance(TreeNode insertNode){
+    private void insertBalance(TreeNode insertNode){
         TreeNode parent = insertNode.parent;
         //父节点为黑色则不用处理
         if(parent.color==1) {return;}
         TreeNode grandParent = parent.parent;
         TreeNode uncle = grandParent.lChild==parent?grandParent.rChild:grandParent.lChild;
-        //叔叔节点为叶子节点
+        //叔叔节点为叶子节点或者黑色
         if(uncle==null||uncle.color==1){
-            parent.color=1;
             grandParent.color=0;
             //插入节点和父节点位置相同
             if(parent.site.equals(insertNode.site)){
+                parent.color=1;
                 changeWithParent(parent);
             }
             //插入节点和父节点位置不同
             else {
+                insertNode.color=1;
                 changeWithParent(insertNode);
                 changeWithParent(insertNode);
             }
@@ -130,7 +131,7 @@ public class RedBlackTree {
             if(grandParent.parent==null) {return ;}
             if(grandParent.parent.color==0){
                 grandParent.color=0;
-                balance(grandParent);
+                insertBalance(grandParent);
             }
         }
     }
@@ -138,13 +139,13 @@ public class RedBlackTree {
     * description: 插入key value
     * @author: 刘竞(jing.liu14@ucarinc.com)
     * @param1 key：
-* @param2 value：
+    * @param2 value：
     * @Return: void
     * @Date: 2019-10-23 15-44-49
     */
     public void put(Integer key,Integer value){
-        TreeNode father = getInsertSite(key);
-        TreeNode insertNode = new TreeNode(key,value,father);
+        TreeNode father = getSite(key);
+        TreeNode insertNode = new TreeNode(key,value);
         if(father==null) {
             insertNode.color=1;
             root=insertNode;
@@ -160,16 +161,154 @@ public class RedBlackTree {
             insertNode.site=1;
             father.rChild = insertNode;
         }
-        balance(insertNode);
+        insertBalance(insertNode);
     }
 
+    /**
+    * description: 获取后继节点
+    * @author: 刘竞(jing.liu14@ucarinc.com)
+    * @param1 treeNode：
+    * @Return: RedBlackTree.TreeNode
+    * @Date: 2019-10-24 11-19-57
+    */
+    private TreeNode getBehindNode(TreeNode treeNode){
+        TreeNode temp = treeNode.rChild;
+        while(temp.lChild!=null){
+            temp=temp.lChild;
+        }
+        return temp;
+    }
+
+    /**
+    * description: 节点子节点的情况
+    * @author: 刘竞(jing.liu14@ucarinc.com)
+    * @param1 temp：
+    * @Return: int : 1:红色子节点与该节点同向 0:红色子节点与该节点异向 -1:无红色子节点
+    * @Date: 2019-10-24 15-54-57
+    */
+    private int childrenStatus(TreeNode temp){
+        if(temp.lChild!=null&&temp.lChild.color==0&&temp.site==0
+                ||temp.rChild!=null&&temp.rChild.color==0&&temp.site==1){
+            return 1;
+        }
+        if(temp.lChild!=null&&temp.lChild.color==0
+                ||temp.rChild!=null&&temp.rChild.color==0){
+            return 0;
+        }
+        return -1;
+    }
+
+    /**
+    * description: 删除操作自平衡
+    * @author: 刘竞(jing.liu14@ucarinc.com)
+    * @param1 targetNode：
+    * @Return: void
+    * @Date: 2019-10-24 11-20-53
+    */
+    private void deleteBalance(TreeNode targetNode){
+        if(targetNode.parent==null) {
+            if(targetNode.lChild==null&&targetNode.rChild==null) {
+                root = null;
+            }
+            return;
+        }
+        if(targetNode.color==0) {
+            if(targetNode.site==0) {targetNode.parent.lChild=null;}
+            else {targetNode.parent.rChild=null;}
+            return;
+        }
+        TreeNode parent = targetNode.parent;
+        TreeNode brother = parent.lChild!=targetNode?parent.lChild:parent.rChild;
+        if(brother.color==1){
+            switch (childrenStatus(brother)){
+                case 1:
+                    brother.color=parent.color;
+                    parent.color=1;
+                    if(brother.site==0) {brother.lChild.color=1;}
+                    else {brother.rChild.color=1;}
+                    changeWithParent(brother);
+                    break;
+                case 0:
+                    TreeNode nephewNode=brother.site==0?brother.rChild:brother.lChild;
+                    nephewNode.color=parent.color;
+                    parent.color=1;
+                    brother.color=1;
+                    changeWithParent(nephewNode);
+                    changeWithParent(nephewNode);
+                    break;
+                case -1:
+                    if(parent.color==0){
+                        brother.color=0;
+                        parent.color=1;
+                    }
+                    else{
+                        brother.color=0;
+                        deleteBalance(parent);
+                    }
+                    break;
+                default:
+                    System.out.println("fuck you");
+                    return ;
+            }
+        }
+        else{
+            brother.color=1;
+            parent.color=0;
+            changeWithParent(brother);
+            deleteBalance(targetNode);
+        }
+    }
+
+    /**
+    * description: 红黑树删除
+    * @author: 刘竞(jing.liu14@ucarinc.com)
+    * @param1 key：
+    * @Return: boolean
+    * @Date: 2019-10-24 10-29-56
+    */
+    public boolean delete(Integer key){
+        TreeNode deleteNode = getSite(key);
+        if(deleteNode==null||(!deleteNode.key.equals(key))){
+            return false;
+        }
+        if(deleteNode.lChild==null&&deleteNode.rChild==null){
+            deleteBalance(deleteNode);
+            if(deleteNode.site==0){deleteNode.parent.lChild=null;}
+            else {deleteNode.parent.rChild=null;}
+        }
+        else if(deleteNode.lChild!=null&&deleteNode.rChild!=null){
+            TreeNode targetNode=getBehindNode(deleteNode);
+            deleteNode.value=targetNode.value;
+            deleteNode.key=targetNode.key;
+            deleteBalance(targetNode);
+            if(targetNode.site==0){targetNode.parent.lChild=null;}
+            else {targetNode.parent.rChild=null;}
+        }
+        else {
+            TreeNode unNullNode = deleteNode.lChild!=null?deleteNode.lChild:deleteNode.rChild;
+            unNullNode.parent=deleteNode.parent;
+            if(deleteNode.site==0){deleteNode.parent.lChild=unNullNode;}
+            else {deleteNode.parent.rChild=unNullNode;}
+            unNullNode.site=deleteNode.site;
+            unNullNode.color=1;
+        }
+        return true;
+    }
+
+    /**
+    * description: 打印树节点
+    * @author: 刘竞(jing.liu14@ucarinc.com)
+    * @param1 temp：
+    * @Return: void
+    * @Date: 2019-10-24 08-32-37
+    */
     public void print(TreeNode temp){
         if(temp==null) {return;}
-        print(temp.lChild);
         System.out.println(temp.key+"=="+temp.value
                 +"  parentKey=="+(temp.parent==null?null:temp.parent.key)
                 +"  lchild=="+(temp.lChild==null?null:temp.lChild.key)
                 +"  rchild=="+(temp.rChild==null?null:temp.rChild.key));
+        print(temp.lChild);
         print(temp.rChild);
     }
 
@@ -190,7 +329,7 @@ public class RedBlackTree {
         private TreeNode rChild;
         //0为左 1为右
         private Integer site;
-        TreeNode(Integer key, Integer value, TreeNode parent){
+        TreeNode(Integer key, Integer value){
             this.key=key;
             this.value=value;
         }

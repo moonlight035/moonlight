@@ -12,9 +12,7 @@ public class TreeTest {
         redBlackTree.put(65,69);
         redBlackTree.put(15,321);
         redBlackTree.put(36,151);
+        redBlackTree.delete(65);
         redBlackTree.print(redBlackTree.getRoot());
-        System.out.println(redBlackTree.get(1));
-        redBlackTree.put(1,999);
-        System.out.println(redBlackTree.get(1));
     }
 }
