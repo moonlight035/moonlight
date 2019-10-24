@@ -129,8 +129,8 @@ public class RedBlackTree {
             grandParent = parent.parent;
             parent.color=uncle.color=1;
             if(grandParent.parent==null) {return ;}
+            grandParent.color=0;
             if(grandParent.parent.color==0){
-                grandParent.color=0;
                 insertBalance(grandParent);
             }
         }
@@ -305,6 +305,7 @@ public class RedBlackTree {
     public void print(TreeNode temp){
         if(temp==null) {return;}
         System.out.println(temp.key+"=="+temp.value
+                +"  color=="+(temp.color==0?"red":"black")
                 +"  parentKey=="+(temp.parent==null?null:temp.parent.key)
                 +"  lchild=="+(temp.lChild==null?null:temp.lChild.key)
                 +"  rchild=="+(temp.rChild==null?null:temp.rChild.key));
