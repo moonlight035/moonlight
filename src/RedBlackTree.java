@@ -1,5 +1,6 @@
 import sun.reflect.generics.tree.Tree;
 
+import javax.swing.*;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -333,6 +334,39 @@ public class RedBlackTree {
         TreeNode(Integer key, Integer value){
             this.key=key;
             this.value=value;
+        }
+    }
+
+     public class TreeGui extends JFrame {
+        private JButton insertButton;
+        private JButton deleteButton;
+        private JTextField insertText;
+        private JTextField deleteText;
+
+        TreeGui(){
+            setBounds(50,50,1000,1000);
+            init();
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setVisible(true);
+        }
+
+        private void init(){
+            insertButton=new JButton("insert");
+            insertButton.setBounds(0,0,50,50);
+            this.add(insertButton);
+
+            insertText=new JTextField();
+            insertText.setBounds(60,0,100,20);
+            this.add(insertText);
+
+            deleteButton=new JButton("delete");
+            deleteButton.setBounds(200,0,50,50);
+            this.add(deleteButton);
+
+            deleteText=new JTextField();
+            deleteText.setBounds(260,0,100,20);
+            this.add(deleteText);
+
         }
     }
 }
