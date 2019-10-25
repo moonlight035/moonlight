@@ -173,7 +173,7 @@ public class RedBlackTree {
     }
 
     /**
-    * description: 获取后继节点
+    * description: 获取后继节点,该方法默认节点有右子节点
     * @author: 刘竞(jing.liu14@ucarinc.com)
     * @param1 treeNode：
     * @Return: redblacktree.RedBlackTree.TreeNode
