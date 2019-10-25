@@ -1,8 +1,12 @@
 package redblacktree;
 
+import interfaces.MyNode;
+import javafx.scene.Node;
 import sun.reflect.generics.tree.Tree;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -146,15 +150,15 @@ public class RedBlackTree {
     * @Return: void
     * @Date: 2019-10-23 15-44-49
     */
-    public void put(Integer key,Integer value){
+    public boolean put(Integer key,Integer value){
         TreeNode father = getSite(key);
         TreeNode insertNode = new TreeNode(key,value);
         if(father==null) {
             insertNode.color=1;
             root=insertNode;
-            return;
+            return true;
         }
-        if(father.key.equals(key)) {father.value=value;return;}
+        if(father.key.equals(key)) {father.value=value;return true;}
         insertNode.parent=father;
         if(father.key>key) {
             insertNode.site=0;
@@ -165,6 +169,7 @@ public class RedBlackTree {
             father.rChild = insertNode;
         }
         insertBalance(insertNode);
+        return true;
     }
 
     /**
@@ -263,30 +268,30 @@ public class RedBlackTree {
     }
 
     /**
-    * description: 红黑树删除
+    * description: 通过节点删除
     * @author: 刘竞(jing.liu14@ucarinc.com)
-    * @param1 key：
+    * @param1 deleteNode：
     * @Return: boolean
-    * @Date: 2019-10-24 10-29-56
+    * @Date: 2019-10-25 08-48-19
     */
-    public boolean delete(Integer key){
-        TreeNode deleteNode = getSite(key);
-        if(deleteNode==null||(!deleteNode.key.equals(key))){
-            return false;
-        }
+    public boolean deleteByNode(TreeNode deleteNode){
+        if(deleteNode==null||getSite(deleteNode.key)!=deleteNode) {return false;}
+        //没有子节点
         if(deleteNode.lChild==null&&deleteNode.rChild==null){
             deleteBalance(deleteNode);
             if(deleteNode.site==0){deleteNode.parent.lChild=null;}
             else {deleteNode.parent.rChild=null;}
         }
+        //有两个子节点
         else if(deleteNode.lChild!=null&&deleteNode.rChild!=null){
             TreeNode targetNode=getBehindNode(deleteNode);
             deleteNode.value=targetNode.value;
             deleteNode.key=targetNode.key;
-            deleteBalance(targetNode);
+            deleteByNode(targetNode);
             if(targetNode.site==0){targetNode.parent.lChild=null;}
             else {targetNode.parent.rChild=null;}
         }
+        //一个子节点
         else {
             TreeNode unNullNode = deleteNode.lChild!=null?deleteNode.lChild:deleteNode.rChild;
             unNullNode.parent=deleteNode.parent;
@@ -297,6 +302,21 @@ public class RedBlackTree {
         }
         return true;
     }
+    /**
+    * description: 通过key删除
+    * @author: 刘竞(jing.liu14@ucarinc.com)
+    * @param1 key：
+    * @Return: boolean
+    * @Date: 2019-10-24 10-29-56
+    */
+    public boolean deletebyKey(Integer key){
+        TreeNode deleteNode = getSite(key);
+        if(deleteNode==null||(!deleteNode.key.equals(key))){
+            return false;
+        }
+        return deleteByNode(deleteNode);
+    }
+
 
     /**
     * description: 打印树节点
@@ -323,7 +343,7 @@ public class RedBlackTree {
     * @Return:
     * @Date: 2019-10-23 16-35-44
     */
-    private class TreeNode {
+    public class TreeNode extends MyNode {
         private Integer key;
         private Integer value;
         //0为红 1为黑
@@ -333,9 +353,31 @@ public class RedBlackTree {
         private TreeNode rChild;
         //0为左 1为右
         private Integer site;
+        private RedBlackTree redBlackTree;
         TreeNode(Integer key, Integer value){
             this.key=key;
             this.value=value;
+            this.redBlackTree=RedBlackTree.this;
+        }
+
+        public RedBlackTree getRedBlackTree() {
+            return redBlackTree;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public TreeNode getlChild() {
+            return lChild;
+        }
+
+        public TreeNode getrChild() {
+            return rChild;
         }
     }
 
