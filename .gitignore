@@ -15,3 +15,6 @@ out/production/redblacktree.RedBlackTree/META-INF/redblacktree.RedBlackTree.kotl
 .idea/moonlight.iml
 .idea/kotlinc.xml
 out/
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/smartfox_info.xml
+/view/view.iml
