@@ -71,7 +71,7 @@ public class BTree<K,V> implements AbstractTree<K,V> {
         if(site<entryList.size()&&compare(k,entryList.get(site).getK())==0)
             entryList.get(site).setV(v);
         BTreeNode<K,V>[] nodes=null;
-        if(childList.size()==degree*2&&entryList.size()==degree*2-1) {
+        if(entryList.size()==degree*2-1) {
             nodes = splitNode(node);
         }
         if(node.isLeaf()){
@@ -97,16 +97,15 @@ public class BTree<K,V> implements AbstractTree<K,V> {
         List<BTreeNode<K,V>> childList = node.getChild();
         List<MyEntry<K, V>> entryList = node.getEntryList();
         BTreeNode<K,V> parent = node.getParent();
-        if(childList.size()!=degree*2||entryList.size()!=degree*2-1) return null;
         BTreeNode<K,V> newNode = new BTreeNode<>();
-        List<MyEntry<K, V>> newEntryList = new ArrayList(entryList.subList(degree,2*degree-2));
+        List<MyEntry<K, V>> newEntryList = new ArrayList(entryList.subList(degree,2*degree-1));
         entryList.removeAll(newEntryList);
         MyEntry<K,V> upEntry = entryList.get(degree-1);
         entryList.remove(upEntry);
         newNode.setEntryList(newEntryList);
         newNode.setLeaf(node.isLeaf());
         if(!node.isLeaf()){
-            List<BTreeNode<K,V>> newChildList = new ArrayList(entryList.subList(degree,2*degree-1));
+            List<BTreeNode<K,V>> newChildList = new ArrayList(entryList.subList(degree,2*degree));
             childList.removeAll(newChildList);
             newNode.setChild(newChildList);
         }
@@ -203,7 +202,7 @@ public class BTree<K,V> implements AbstractTree<K,V> {
         }
     }
 
-    /**node 的entry个数>=t*/
+    /**node 的entry个数>=degree*/
     private void nodeDelete(int site, BTreeNode<K,V> node, K k){
         List<BTreeNode<K,V>> childList = node.getChild();
         List<MyEntry<K, V>> entryList = node.getEntryList();
@@ -231,7 +230,8 @@ public class BTree<K,V> implements AbstractTree<K,V> {
     private void mergeNode(BTreeNode<K,V> lchild, BTreeNode<K,V> rchild, MyEntry<K,V> entry){
         lchild.getEntryList().add(entry);
         lchild.getEntryList().addAll(rchild.getEntryList());
-        lchild.getChild().addAll(rchild.getChild());
+        if(!lchild.isLeaf())
+            lchild.getChild().addAll(rchild.getChild());
         BTreeNode<K, V> parent = lchild.getParent();
         parent.getChild().remove(rchild);
         parent.getEntryList().remove(entry);
@@ -248,10 +248,6 @@ public class BTree<K,V> implements AbstractTree<K,V> {
         lentry.setV(rentry.getV());
         rentry.setK(k);
         rentry.setV(v);
-    }
-
-    private void innerDelete(BTreeNode<K,V> node, K k){
-
     }
 
     @Override
@@ -287,6 +283,17 @@ public class BTree<K,V> implements AbstractTree<K,V> {
     }
 
     public static void main(String[] args) {
-        BTree<String,String> bTree = new BTree(3);
+        BTree<Integer,String> bTree = new BTree(3);
+        bTree.put(1,null);
+        bTree.put(2,null);
+        bTree.put(3,null);
+        bTree.put(4,null);
+        bTree.put(5,null);
+        bTree.put(6,null);
+//        bTree.put(7,null);
+        System.out.println(bTree.height);
+        bTree.delete(3);
+        bTree.delete(6);
+        System.out.println(bTree.height);
     }
 }
