@@ -1,6 +1,4 @@
-package hashmap;
-
-import java.util.HashMap;
+package datastructure.hashmap;
 
 /**
  * @author jing.liu14@ucarinc.com

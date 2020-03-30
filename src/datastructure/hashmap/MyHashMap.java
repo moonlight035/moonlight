@@ -1,10 +1,7 @@
-package hashmap;
+package datastructure.hashmap;
 
 import interfaces.MyNode;
-import redblacktree.RedBlackTree;
-import sun.reflect.generics.tree.Tree;
-
-import javax.naming.directory.NoSuchAttributeException;
+import datastructure.redblacktree.RedBlackTree;
 
 /**
  * @author jing.liu14@ucarinc.com

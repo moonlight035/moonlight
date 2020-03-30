@@ -1,14 +1,8 @@
-package redblacktree;
+package datastructure.redblacktree;
 
 import interfaces.MyNode;
-import javafx.scene.Node;
-import sun.reflect.generics.tree.Tree;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * @author jing.liu14@ucarinc.com
@@ -46,7 +40,7 @@ public class RedBlackTree {
     * description: 获得key插入的父节点
     * @author: 刘竞(jing.liu14@ucarinc.com)
     * @param1 key：
-    * @Return: redblacktree.RedBlackTree.TreeNode
+    * @Return: datastructure.redblacktree.RedBlackTree.TreeNode
     * @Date: 2019-10-23 15-44-37
     */
     private TreeNode getSite(Integer key){
@@ -176,7 +170,7 @@ public class RedBlackTree {
     * description: 获取后继节点,该方法默认节点有右子节点
     * @author: 刘竞(jing.liu14@ucarinc.com)
     * @param1 treeNode：
-    * @Return: redblacktree.RedBlackTree.TreeNode
+    * @Return: datastructure.redblacktree.RedBlackTree.TreeNode
     * @Date: 2019-10-24 11-19-57
     */
     private TreeNode getBehindNode(TreeNode treeNode){

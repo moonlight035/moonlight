@@ -1,8 +1,7 @@
-package btree;
+package datastructure.btree;
 
 import interfaces.MyNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

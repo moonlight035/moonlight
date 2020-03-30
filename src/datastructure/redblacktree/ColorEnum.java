@@ -1,4 +1,4 @@
-package redblacktree;
+package datastructure.redblacktree;
 
 /**
  * @author jing.liu14@ucarinc.com

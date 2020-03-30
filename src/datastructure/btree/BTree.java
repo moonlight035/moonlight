@@ -1,4 +1,4 @@
-package btree;
+package datastructure.btree;
 
 import interfaces.AbstractTree;
 
