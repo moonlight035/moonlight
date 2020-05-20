@@ -17,7 +17,7 @@ public class Handler{
     private static int bean=99;
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         MyLoader loader = new MyLoader();
-        Class<?> aClass = loader.loadClass("Handler");
+        Class<?> aClass = loader.loadClass("jvm.server.Handler");
         Object o = aClass.newInstance();
         System.out.println(o.getClass());
         System.out.println(o instanceof Handler);
